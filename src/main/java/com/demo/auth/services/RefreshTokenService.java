@@ -63,4 +63,7 @@ public class RefreshTokenService {
         User user = tokenFromDb.getUser();
         return jwtUtil.generateToken(user.getEmail());
     }
+    public void delete(RefreshToken refreshToken) {
+        refreshTokenRepository.delete(refreshToken);
+    }
 }

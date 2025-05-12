@@ -64,7 +64,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials: " + e.getMessage());
         }
     }
-    @PostMapping("/refresh-token")
+    @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshToken refreshTokenRequest) {
         try {
            
@@ -90,5 +90,22 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error refreshing token: " + e.getMessage());
         }
     }
+    @PostMapping("/logout")
+     public ResponseEntity<?> logout(@RequestBody RefreshToken refreshTokenRequest) {
+     try {
+        
+        RefreshToken refreshTokenFromDb = refreshTokenService.findByToken(refreshTokenRequest.getToken())
+                .orElseThrow(() -> new RuntimeException("Refresh Token not found"));
+
+      
+        refreshTokenService.delete(refreshTokenFromDb);
+
+       
+        return ResponseEntity.ok("Logged out successfully");
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error logging out: " + e.getMessage());
+    }
+}
+
 }
  
